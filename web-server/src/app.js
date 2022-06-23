@@ -2,6 +2,8 @@ const express = require('express');
 const path = require('path');
 const hbs = require('hbs');
 const fs = require('fs');
+const geocode = require('./utils/geocode');
+const forecast = require('./utils/forecast');
 
 // define path for express config
 const publicDir = path.join(__dirname, '../public');
@@ -21,7 +23,7 @@ app.use(express.static(publicDir));
 
 app.get('', (req, res)=>{
     res.render('index', {
-        title: 'Home page',
+        title: 'Weather App',
         name: 'Smit Bhikadiya'
     });
 });
@@ -42,43 +44,26 @@ app.get('/help', (req, res)=>{
 
 app.get('/weather', (req, res)=>{
     const query = req.query;
-    if(!query.address){
-        return res.send({
-            error: 'Addres must need to provide'
+    if(!query.address) return returnErrorResponse(res, 'address is requierd');
+    geocode.loadGeoCode(query.address, (geoCodeData = {}, geoCodeError)=>{
+        if(geoCodeError) return returnErrorResponse(res, geoCodeError);
+        forecast.loadForecast(geoCodeData, (foreCastData, foreCastError)=>{
+            if(foreCastError) return returnErrorResponse(res, foreCastError);
+            res.send(foreCastData);
         });
-    }
-
-    res.send({
-        cordinates: [10.20, -20.123],
-        placeName: query.address,
-        weather: {
-            temp: 30,
-            humadity: 12,
-            feelslike: 36
-        }
     });
-
 });
 
 app.get('/products', (req, res)=>{
 
     const queries = req.query;
     if(!queries.search){
-        return res.send({
-            error: 'You must provide a search term'
-        }); 
+        return returnErrorResponse(res, 'You must provide a search term');
     }
-
     res.send({
-        products: [
-            {
-                id: 1,
-                productName: 'Apple',
-                description: '100% Fresh Fruits'
-            }
-        ]
+        products: []
     });
-    
+
 })
 
 
@@ -95,6 +80,10 @@ app.get('*', (req,res)=>{
         errorMessage: 'Route is not found'
     });
 });
+
+const returnErrorResponse = (res,error)=>{
+    return res.send({error});
+}
 
 app.listen(3000, () => {
     console.log("Server is up on port 3000");

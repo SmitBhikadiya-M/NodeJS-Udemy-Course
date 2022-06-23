@@ -11,7 +11,11 @@ const loadGeoCode = (address, fc) => {
     } else if(res.body.features.length === 0){
         fc(undefined, "Unable to find location. Try another search!!");
     }else{
-        fc({cordinates: { latitude: res.body.features[0].center[1], longitude: res.body.features[0].center[0] }, placeName: res.body.features[0].place_name}, undefined);
+        fc({ 
+          latitude: res.body.features[0].center[1],
+          longitude: res.body.features[0].center[0], 
+          placeName: res.body.features[0].place_name 
+        }, undefined);
     }
   });
 

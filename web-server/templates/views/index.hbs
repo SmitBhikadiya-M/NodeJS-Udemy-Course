@@ -6,13 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/styles.css">
     <link rel="icon" href="/img/cloud.png">
-    <script src="/js/app.js"></script>
     <title>Home</title>
 </head>
 <body>
     <div class="main-content">
         {{>header}}
+        <div class="weather">
+            <div class="weather-form">
+                <form id="weather-search-form">
+                    <input type="text" placeholder="Location..">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            <div class="weather-info">
+                <div id="iferror">
+                    
+                </div>
+                <div id="ifnoterror">
+
+                </div>
+            </div>
+        </div>
     </div>
    {{>footer}}
+
+    <script src="/js/app.js"></script>
 </body>
 </html>
