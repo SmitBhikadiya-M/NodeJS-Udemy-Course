@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 Error</title>
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="icon" href="/img/cloud.png">
+    <style>
+        .outer{
+            height: 90vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+        .error-title{
+            font-size: 3rem;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        .error-message{
+            color: red;
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    {{>header}}
+    <div class="outer">
+        <div class="inner error">
+            <h1 class="error-title">{{ errorCode }} Error!!</h1>
+            <p class="error-message">{{ errorMessage }}</p>
+        </div>
+    </div>
+    {{>footer}}
+</body>
+</html>
