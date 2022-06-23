@@ -8,6 +8,8 @@ window.onload = function () {
   
   weatherform.addEventListener("submit", (e) => {
     e.preventDefault();
+    iferror.textContent = 'Loading...';
+    ifnoterror.textContent = '';
     const search = e.target.querySelector("input[type=text]").value;
     fetch(`http://localhost:3000/weather?address=${search}`)
     .then((res)=>res.json())
