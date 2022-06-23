@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "yargs": "^17.5.1"
+  },
+  "name": "playground",
+  "description": "Udemy Course: Basic of JSON and  Arrow Function with Some ES6 Concepts",
+  "version": "1.0.0",
+  "main": "1-json.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SmitBhikadiya-Maruti/Playground.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SmitBhikadiya-Maruti/Playground/issues"
+  },
+  "homepage": "https://github.com/SmitBhikadiya-Maruti/Playground#readme"
+}
