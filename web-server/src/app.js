@@ -41,7 +41,23 @@ app.get('/help', (req, res)=>{
 });
 
 app.get('/weather', (req, res)=>{
-    res.send("<h1>Hello Weather</h1>");
+    const query = req.query;
+    if(!query.address){
+        return res.send({
+            error: 'Addres must need to provide'
+        });
+    }
+
+    res.send({
+        cordinates: [10.20, -20.123],
+        placeName: query.address,
+        weather: {
+            temp: 30,
+            humadity: 12,
+            feelslike: 36
+        }
+    });
+
 });
 
 app.get('/products', (req, res)=>{
@@ -62,6 +78,7 @@ app.get('/products', (req, res)=>{
             }
         ]
     });
+    
 })
 
 
