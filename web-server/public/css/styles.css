@@ -5,7 +5,7 @@ body{
     text-align: center;
     padding: 10px 0px;
 
-    min-height: 100vh;
+    min-height: 95vh;
     display: flex;
     flex-direction: column;
 }
@@ -39,9 +39,14 @@ header div a{
     color: #333333;
     padding: 5px 10px;
 }
+header div a.active{
+    background-color: black;
+    color: white;
+}
 header div a:hover{
     background-color: black;
     color: white;
+    opacity: 0.9;
 }
 
 .about-main-img img{
@@ -73,4 +78,16 @@ header div a:hover{
     color: white;
     border: 1px solid black;
     padding: 4px 10px;
+}
+#iferror{
+    color: red;
+}
+#ifnoterror div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+#ifnoterror div img{
+    width: 70px;
 }
