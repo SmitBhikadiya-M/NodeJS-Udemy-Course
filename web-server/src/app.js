@@ -44,6 +44,26 @@ app.get('/weather', (req, res)=>{
     res.send("<h1>Hello Weather</h1>");
 });
 
+app.get('/products', (req, res)=>{
+
+    const queries = req.query;
+    if(!queries.search){
+        return res.send({
+            error: 'You must provide a search term'
+        }); 
+    }
+
+    res.send({
+        products: [
+            {
+                id: 1,
+                productName: 'Apple',
+                description: '100% Fresh Fruits'
+            }
+        ]
+    });
+})
+
 
 app.get('/help/*', (req, res)=>{
     res.render("404", {

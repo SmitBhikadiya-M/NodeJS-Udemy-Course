@@ -1,3 +1,50 @@
-h1{
-    color: teal;
+body{
+    color: #333333;
+    max-width: 650px;
+    margin: 0px auto;
+    text-align: center;
+    padding: 10px 0px;
+
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.main-content{
+    flex-grow: 1;
+}
+
+footer{
+    background-color: black;
+    color: #fff;
+    border-top: 2px solid green;
+    padding: 5px;
+    margin-top: 5px;
+}
+
+footer p{
+    font-size: 1.2rem;
+}
+
+header{
+    border-bottom: 2px solid green;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    padding: 5px 0px;
+}
+
+header div a{
+    text-decoration: none;
+    color: #333333;
+    padding: 5px 10px;
+}
+header div a:hover{
+    background-color: green;
+    color: white;
+}
+
+.about-main-img img{
+    width: 100%;
+    max-width: 400px;
+    height: fit-content;
 }
