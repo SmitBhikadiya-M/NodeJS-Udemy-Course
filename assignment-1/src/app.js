@@ -21,20 +21,6 @@ app.get('/repolist', (req, res)=>{
             if(query){
                 filterData = data.filter((repo) => {
                     let flag = false;
-                    if(query.language){
-                        if(repo.language && (repo.language.toLowerCase() === query.language.toLowerCase())){
-                            flag = true;
-                        }else{
-                            flag = false;
-                        }
-                    }
-                    if(query.forks){
-                        if(flag && repo.forks && repo.forks >= query.forks){
-                            flag = true;
-                        }else{
-                            flag = false;
-                        }
-                    }
                     if(query.stargazers_count){
                         if(flag && repo.stargazers_count && repo.stargazers_count >= query.stargazers_count){
                             flag = true;
