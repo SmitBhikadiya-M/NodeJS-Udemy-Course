@@ -1,7 +1,6 @@
 const repoData = require('./utils/repoData');
 const fs = require('fs');
 const express = require('express');
-const { query } = require('express');
 
 const app = express();
 const port = 3000;
