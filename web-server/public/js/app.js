@@ -8,6 +8,8 @@ window.onload = function () {
   
   weatherform.addEventListener("submit", (e) => {
     e.preventDefault();
+    iferror.textContent = '';
+    ifnoterror.textContent = 'Loading...';
     const search = e.target.querySelector("input[type=text]").value;
     fetch(`http://localhost:3000/weather?address=${search}`)
     .then((res)=>res.json())
@@ -15,9 +17,17 @@ window.onload = function () {
         console.log(res);
         if(res.error) {
             iferror.textContent = res.error;
+            ifnoterror.textContent = '';
         }else {
-            iferror.textContent = '';
-            ifnoterror.textContent = `Currently at ${res.placeName}, ${res.temperature}C temperature out `;
+            ifnoterror.innerHTML = `<div>
+                                      <img src='${res.weather_icons}'></img>
+                                      <h3>${res.weather_descriptions}</h3>
+                                      <span style='font-size:22px; font-weight:bold'>${res.temperature}C Temp</span>
+                                      <p style='margin:0'>
+                                        <div>(${res.placeName})</div>
+                                        <div></div>
+                                      </p>
+                                    </div>`;
         } 
     })
     .catch((err)=>{
