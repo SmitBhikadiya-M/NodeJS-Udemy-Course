@@ -12,6 +12,7 @@ const partialPath = path.join(__dirname, "../templates/partials");
 
 // get instance of express
 const app = express();
+const port = process.env.PORT || 3000;
 
 // set handlebars engine and views directory
 app.set("view engine", "hbs");
@@ -82,6 +83,6 @@ const returnErrorResponse = (res, error) => {
   return res.send({ error });
 };
 
-app.listen(3000, () => {
-  console.log("Server is up on port 3000");
+app.listen(port, () => {
+  console.log("Server is up on port "+port);
 });

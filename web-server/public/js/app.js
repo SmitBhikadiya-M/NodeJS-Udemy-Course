@@ -11,7 +11,7 @@ window.onload = function () {
     iferror.textContent = '';
     ifnoterror.textContent = 'Loading...';
     const search = e.target.querySelector("input[type=text]").value;
-    fetch(`http://localhost:3000/weather?address=${search}`)
+    fetch(`/weather?address=${search}`)
     .then((res)=>res.json())
     .then((res)=>{
         console.log(res);
