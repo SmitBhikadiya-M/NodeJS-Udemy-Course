@@ -9,7 +9,12 @@ window.onload = () => {
         let stargazers = document.getElementById("stargazers").value;
         if( stargazers===undefined || stargazers==='' || stargazers===null ) stargazers = 0;
         const baseApi = "http://localhost:3000/repolist?stargazers_count="+stargazers;
-        fetch(baseApi+"&download=csv")
+        fetch(baseApi+"&download=csv", {
+            type: 'cors',
+            headers: {
+                'Access-Control-Allow-Origin':'*'
+            }
+        })
         .then((res)=>res.json())
         .then((res)=>{
             if(res.length === 0){

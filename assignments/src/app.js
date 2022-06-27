@@ -4,6 +4,7 @@ const express = require('express');
 const path = require('path');
 const hbs = require('hbs');
 const converter = require("./utils/json2csvConversation");
+const cors = require('cors');
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -20,6 +21,10 @@ hbs.registerPartials(partialHBSDir);
 
 
 app.use(express.static(publicDir));
+const corsOption = {
+    origin: '*',
+    methods: "GET, POST"
+};
 
 app.get('', (req,res)=>{
     res.render('index', {
@@ -36,7 +41,7 @@ app.get('/a1', (req,res)=>{
 });
 
 // github repository endpoint
-app.get('/repolist', (req, res)=>{
+app.get('/repolist', cors(corsOption), (req, res)=>{
     const query = req.query;
     repoData.loadRepoData((err, data)=>{
         if(err){
