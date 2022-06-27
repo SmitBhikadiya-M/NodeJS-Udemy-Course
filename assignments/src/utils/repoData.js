@@ -1,7 +1,7 @@
 const request = require('request');
 
 const loadRepoData = (fc) => {
-    const url = "https://api.github.com/search/repositories?q=is:public+forks:>200+language:python";
+    const url = "https://api.github.com/search/repositories?q=is:public+forks:>=200+language:python";
     const headers = {
         'user-agent' : 'assignments'
     }
