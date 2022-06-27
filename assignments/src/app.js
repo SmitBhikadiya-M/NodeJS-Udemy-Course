@@ -6,7 +6,7 @@ const hbs = require('hbs');
 const converter = require("./utils/json2csvConversation");
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 // defining path
 const publicDir = path.join(__dirname , '../public');
@@ -34,7 +34,6 @@ app.get('/a1', (req,res)=>{
         name:"Smit Bhikadiya"
     });
 });
-
 
 // github repository endpoint
 app.get('/repolist', (req, res)=>{
