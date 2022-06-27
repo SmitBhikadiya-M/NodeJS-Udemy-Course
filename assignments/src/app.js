@@ -6,13 +6,19 @@ const hbs = require('hbs');
 const converter = require("./utils/json2csvConversation");
 const cors = require('cors');
 
+// application level declration
 const app = express();
 const port = process.env.PORT || 3000;
+const corsOption = {
+    origin: '*',
+    methods: ["GET", "POST"]
+};
 
 // defining path
 const publicDir = path.join(__dirname , '../public');
 const partialHBSDir = path.join(__dirname , '../templates/partials');
 const viewsHBSDir = path.join(__dirname , '../templates/views');
+
 
 // template engine configuration for handlebar
 app.set('view engine', 'hbs');
@@ -21,10 +27,7 @@ hbs.registerPartials(partialHBSDir);
 
 
 app.use(express.static(publicDir));
-const corsOption = {
-    origin: '*',
-    methods: "GET, POST"
-};
+app.use(cors(corsOption));
 
 app.get('', (req,res)=>{
     res.render('index', {
@@ -41,7 +44,7 @@ app.get('/a1', (req,res)=>{
 });
 
 // github repository endpoint
-app.get('/repolist', cors(corsOption), (req, res)=>{
+app.get('/repolist', (req, res)=>{
     const query = req.query;
     repoData.loadRepoData((err, data)=>{
         if(err){
