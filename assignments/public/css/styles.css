@@ -2,9 +2,7 @@ body{
     color: #333333;
     max-width: 650px;
     margin: 0px auto;
-    text-align: center;
     padding: 10px 0px;
-
     min-height: 95vh;
     display: flex;
     flex-direction: column;
@@ -90,4 +88,72 @@ header div a:hover{
 }
 #ifnoterror div img{
     width: 70px;
+}
+
+button, input[type=submit], a{
+    cursor: pointer;
+}
+
+.download-btn{
+    background-color: #1e90ff;
+    border: none;
+    color: #ffffff;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.view-btn{
+    background-color: #00720f;
+    border: none;
+    color: #ffffff;
+    padding: 8px 15px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.assignments .description{
+    margin: 5px;
+    margin-bottom: 10px;
+    border-top: 1px solid #0000002a;
+    border-bottom: 1px solid #0000002a;
+}
+
+.hide{
+    display: none;
+}
+.show{
+    display: block;
+}
+
+.errorDiv{
+    margin-top: 2px;
+    color: red;
+}
+
+/* Assignment 1: CSS */
+
+.assignment1{
+    padding: 10px;
+}
+
+.assignment1 form input[type=number]{
+    font-size: 16px;
+    padding: 5px;
+    outline: none;
+}
+
+
+.assignment1 form button{
+    font-size: 16px;
+    padding: 5px;
+}
+
+.assignment1 .buttons{
+    display: block;
+    margin-top: 10px;
+}
+
+.assignment1 .buttons.hide{
+    display: none;
 }

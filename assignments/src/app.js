@@ -3,6 +3,7 @@ const fs = require('fs');
 const express = require('express');
 const path = require('path');
 const hbs = require('hbs');
+const converter = require("./utils/json2csvConversation");
 
 const app = express();
 const port = 3000;
@@ -44,23 +45,30 @@ app.get('/repolist', (req, res)=>{
                 error: err
             });
         }else{
-            let filterData = [];
-            if(query){
+            let filterData = data;
+            if(query && query.stargazers_count){
                 filterData = data.filter((repo) => {
-                    let flag = false;
-                    if(query.stargazers_count){
-                        if(flag && repo.stargazers_count && repo.stargazers_count >= query.stargazers_count){
-                            flag = true;
-                        }else{
-                            flag = false;
-                        }
+                    if(repo.stargazers_count && repo.stargazers_count >= query.stargazers_count){
+                        return true;
+                    }else{
+                        return false;
                     }
-                    return flag;
                 });
             }
             if(filterData.length === 0){
-                filterData = data;
+                return res.send({
+                    error: "No Record Found"
+                });
             }
+
+            if(query && query.download && query.download === 'csv'){
+                converter(filterData, (err)=>{
+                    if(err!==''){
+                        return res.send({ err });
+                    }
+                });
+            }  
+
             res.send(filterData);
         }
     });
