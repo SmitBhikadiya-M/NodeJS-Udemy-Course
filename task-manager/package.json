@@ -5,13 +5,14 @@
   "main": "index.js",
   "scripts": {
     "start": "node src/app.js",
-    "dbrun" : "node src/db/mongoose.js"
+    "dbrun": "node src/db/mongoose.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "mongodb": "^3.1.10",
-    "mongoose": "^5.3.16"
+    "mongoose": "^5.3.16",
+    "validator": "^13.7.0"
   }
 }
