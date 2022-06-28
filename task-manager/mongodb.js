@@ -3,55 +3,31 @@ const { MongoClient, ObjectID } = require('mongodb');
 
 const connectionURL = 'mongodb://127.0.0.1:27017';
 const databaseName = 'task-manager';
-const id = new ObjectID();
-console.log(id, id.id, id.id.length, id.id.toHaxString().length ,id.getTimestamp());
 
 MongoClient.connect(connectionURL, { useNewUrlParser: true }, (error, client)=>{
    if(error){ return console.log(error) };
    
    const db = client.db(databaseName);
 
-    //    db.collection('users').insertOne({
-    //     _id:id,
-    //     name: 'Smit',
-    //     age: 21
-    //    }, (error, result)=>{
-    //     if(error) return console.log("Unable to inset user!!");
-    //         console.log(result.ops); //array of document
-    //     });
-        
-    //     console.log(123);
+    // read data: findOne, find
 
-    // const users = [
-    //     {
-    //         name: "Smit",
-    //         age: 21
-    //     },{
-    //         name: "Ankit",
-    //         age: 20
-    //     }
-    // ]
-
-    // db.collection('users').insertMany(users, (error, result)=>{
+    // findOne only fetched first match value
+    // db.collection('users').findOne({ _id: new ObjectID('62baa4172beed58ec06cd299') }, (error, user)=>{
     //     if(error) return console.log(error);
+    //     console.log(user);
+    // })
 
-    //     console.log(result, result.ops);
+    // find method returns cursor then we need to use to toArray and  count for getting actual data
+    // const cursor = db.collection('users').find({ age: 27 });
+    // cursor.toArray((error, users)=>{
+    //     if(error) return console.log(error);
+    //     console.log(users);
+    // }); 
+    // cursor.count((error, count)=>{
+    //     if(error) return console.log(error);
+    //     console.log(count);
     // });
 
-    // db.collection('tasks').insertMany([
-    //     {
-    //         description: "Followed The sharing document's steps",
-    //         completed: true
-    //     },{
-    //         description: "Will go to buy new clothes",
-    //         completed: false
-    //     },{
-    //         description: "This is just for testing purpose",
-    //         completed: true
-    //     }
-    // ], (error, result)=>{
-    //     if(error) return console.log(error);
-    //     console.log(result.ops);
-    // });
- 
+    // task2: 
+    
 });
