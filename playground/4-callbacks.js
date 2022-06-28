@@ -1,13 +1,10 @@
-// challenge function 
-
-const add = (a, b, fc) => {
+const doWorkCallback = (callback) => {
     setTimeout(()=>{
-        fc(a+b);
-    }, 2000)
+        callback( undefined, 'This is my result');
+    },2000);
 }
 
-add(1, 4, (sum)=>{
-    console.log(sum);
+doWorkCallback((err, res) => {
+    if(err) return console.log(err);
+    console.log(res);
 });
-
-// 
