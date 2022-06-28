@@ -10,8 +10,7 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 3000;
 const corsOption = {
-    origin: '*',
-    methods: ["GET", "POST"]
+    origin: ['https://nodejs-udemy-assignments.herokuapp.com', 'http://localhost:3000/']
 };
 
 // defining path
