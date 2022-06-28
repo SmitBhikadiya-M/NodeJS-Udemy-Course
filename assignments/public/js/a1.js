@@ -8,7 +8,7 @@ window.onload = () => {
         e.preventDefault();
         let stargazers = document.getElementById("stargazers").value;
         if( stargazers===undefined || stargazers==='' || stargazers===null ) stargazers = 0;
-        const baseApi = "http://localhost:3000/repolist?stargazers_count="+stargazers;
+        const baseApi = "/repolist?stargazers_count="+stargazers;
         fetch(`${baseApi}&download=csv`, {
             mode: 'cors',
             headers: {
