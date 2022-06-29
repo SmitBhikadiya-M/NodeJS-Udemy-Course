@@ -20,6 +20,7 @@ const userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true,
         trim: true,
         lowercase: true,
         validate(value) {
@@ -39,6 +40,21 @@ const userSchema = new mongoose.Schema({
     },
 });
 
+
+// middleware : for authentication process
+userSchema.statics.findByCredentials = async (email, password) => {
+    const user = await User.findOne({ email });
+    if(!user){
+        throw new Error("Unable to login: Invalid Email");
+    }
+    const isMatch = await bcrypt.compare(password, user.password);
+    if(!isMatch){
+        throw new Error("Unable to login: Invalid Password");
+    }
+    return user;
+}
+
+// middleware: hash plain password before saving 
 userSchema.pre('save', async function(next){
     const user = this;
     console.log(user.password,user.isModified('password'));
