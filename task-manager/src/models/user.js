@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 const userSchema = new mongoose.Schema({
     name: {
@@ -38,10 +39,17 @@ const userSchema = new mongoose.Schema({
                 throw new Error("Password can't contain string 'password'");
         },
     },
+    tokens: [{
+        token: {
+            type: String,
+            required: true
+        }
+    }]
 });
 
 
 // middleware : for authentication process
+// hear we use statics methods some time its called model methods
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email });
     if(!user){
@@ -52,6 +60,16 @@ userSchema.statics.findByCredentials = async (email, password) => {
         throw new Error("Unable to login: Invalid Password");
     }
     return user;
+}
+
+// middleware : for jwt token
+// hear we use schema methods called as instance methods
+userSchema.methods.genrateAuthToken = async function(){
+    const user = this;
+    const token = jwt.sign({_id:user.id.toString()}, 'NodeJsCourseByAndrew');
+    user.tokens = user.tokens.concat({ token });
+    await user.save();
+    return token;
 }
 
 // middleware: hash plain password before saving 
