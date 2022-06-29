@@ -1,21 +1,21 @@
-const mongoose = require('mongoose');
-const validator = require('validator');
+const mongoose = require("mongoose");
+const validator = require("validator");
+const bcrypt = require('bcrypt');
 
-//create modal for set-up validation for users collection
-const User = mongoose.model('User', {
-    name: { 
-        type: String, 
+const userSchema = new mongoose.Schema({
+    name: {
+        type: String,
         required: true,
-        trim: true
+        trim: true,
     },
     age: {
         type: Number,
-        default: 0, 
+        default: 0,
         validate(value) {
-            if(value < 0){
+            if (value < 0) {
                 throw new Error("Age must be positive number");
             }
-        }
+        },
     },
     email: {
         type: String,
@@ -23,19 +23,32 @@ const User = mongoose.model('User', {
         trim: true,
         lowercase: true,
         validate(value) {
-            if(!validator.isEmail(value)) throw new Error("Email is invalid!!!!");
-        }
+            if (!validator.isEmail(value)) throw new Error("Email is invalid!!!!");
+        },
     },
     password: {
         type: String,
         required: true,
         trim: true,
         minlength: 7,
-        validate(value){
+        validate(value) {
             //if(value <= 6) throw new Error("Length must be grather than 6");
-            if(value.toLowerCase().includes('password')) throw new Error("Password can't contain string 'password'");
-        }
-    }
+            if (value.toLowerCase().includes("password"))
+                throw new Error("Password can't contain string 'password'");
+        },
+    },
 });
+
+userSchema.pre('save', async function(next){
+    const user = this;
+    console.log(user.password,user.isModified('password'));
+    if(user.isModified('password')){
+        user.password = await bcrypt.hash(user.password, 8);
+    }
+    next();
+});
+
+//create modal for set-up validation for users collection
+const User = mongoose.model("User", userSchema);
 
 module.exports = User;
