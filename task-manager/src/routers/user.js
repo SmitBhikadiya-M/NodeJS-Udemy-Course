@@ -1,5 +1,6 @@
 const express = require("express");
 const User = require("../models/user");
+const auth = require("../middleware/auth");
 
 const router = new express.Router();
 
@@ -10,7 +11,8 @@ router.post('/users', async (req, res)=>{
     const user = new User(req.body);
     try{
         await user.save();
-        res.status(201).send(user);
+        const token = await user.genrateAuthToken();
+        res.status(201).send({ user, token });
     }catch(e){
         res.status(400).send(e);
     }
@@ -28,7 +30,7 @@ router.post('/users/login', async (req,res)=>{
 });
 
 // EndPoint: reading all users
-router.get("/users", async (req, res)=>{
+router.get("/users", auth, async (req, res)=>{
     try{
         const users = await User.find({});
         res.send(users);
@@ -37,8 +39,14 @@ router.get("/users", async (req, res)=>{
     }
 });
 
+// EndPoint: reading my own profile
+router.get('/users/me', auth ,(req, res)=>{
+    console.log(req.user);
+    res.send(req.user);
+});
+
 // EndPoint: reading perticular user by id
-router.get("/users/:id", async (req, res)=>{
+router.get("/users/:id", auth, async (req, res)=>{
     const param = req.params;
     try{
         const user = await User.findById(param.id);
@@ -49,8 +57,9 @@ router.get("/users/:id", async (req, res)=>{
     }
 });
 
+
 // EndPoint: update user by its id
-router.patch('/users/:id', async (req, res)=>{
+router.patch('/users/:id', auth, async (req, res)=>{
     
     const id = req.params.id;
 
@@ -76,7 +85,7 @@ router.patch('/users/:id', async (req, res)=>{
 });
 
 // EndPoint: delete user by its id
-router.delete('/users/:id', async (req,res)=>{
+router.delete('/users/:id', auth, async (req,res)=>{
     const id = req.params.id;
     try{
         const user = await User.findByIdAndDelete(id);
