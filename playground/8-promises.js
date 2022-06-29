@@ -1,14 +1,27 @@
-const doWorkCallback = new Promise((resolve, reject)=>{
-    setTimeout(()=>{
-        //resolve("This is my result");
-        reject("This is my error");
-    },2000);
-});
+const add = (a,b)=>{
+    return new Promise((resolve, reject)=>{
+        setTimeout(()=>{
+            resolve(a+b);
+        },2000);
+    });
+}
 
-doWorkCallback.then((res)=>{
-    console.log(res);
+add(10,15).then((res)=>{
+    add(res, 5).then((r)=>{
+        console.log(r);
+    }).catch((e)=>{
+        console.log(e);
+    });
 }).catch((err)=>{
     console.log(err);
 });
 
-console.log("123");
+// Promise chaining: to avoid above complexity of coding
+
+add(10,15).then((res)=>{
+    return add(res,5);
+}).then((res)=>{
+    console.log(res);
+}).catch((err)=>{
+    console.log(err);
+});
