@@ -47,6 +47,12 @@ const userSchema = new mongoose.Schema({
     }]
 });
 
+// create ralation beetwen Task And User model
+userSchema.virtual('tasks', {
+    ref: 'Task',
+    localField: '_id',
+    foreignField: 'owner'
+});
 
 // call Static method of User models using shcema for authentication
 userSchema.statics.findByCredentials = async (email, password) => {
