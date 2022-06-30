@@ -27,14 +27,14 @@ router.post('/tasks', auth, async (req, res)=>{
 // EndPoint: reading all tasks
 router.get("/tasks", auth, async (req, res)=>{
 
-    // filtering: GET users?completed=true
+    // filtering: GET /tasks?completed=true
     const match = {}
     if(req.query.completed){
         match.completed = req.query.completed === 'true';
     }
 
-    // pagination: GET users?limit=10&skip=0 ( show 10 records on first page )
-    const options = { limit: 2, skip: 0 }
+    // pagination: GET /tasks?limit=10&skip=0 ( show 10 records on first page )
+    const options = { limit: 2, skip: 0, sort: {} }
     if(req.query.limit){
         options.limit = parseInt(req.query.limit);
     }
@@ -43,11 +43,19 @@ router.get("/tasks", auth, async (req, res)=>{
         options.skip = (pageNum >= 1) ? (pageNum-1) * options.limit : 0; 
     }
 
+    // sorting: GET /tasks?sortBy=createdAt_asc
+    const sort = {}
+    if(req.query.sortBy){  
+        let [ sortBy='completed', order='desc' ] = req.query.sortBy.split("_");
+        sort[sortBy] = (order==='asc') ? 1 : -1;
+    }
+    options.sort = sort;
+
     try{
         await req.user.populate({
             path: 'tasks',
             match,
-            options
+            options,
         }).execPopulate();
         res.send(req.user.tasks);
     }catch(e){
