@@ -4,8 +4,6 @@ const auth = require("../middleware/auth");
 
 const router = new express.Router();
 
-/*------------- User's EndPoint ------------*/
-
 // EndPoint: creating users
 router.post('/users', async (req, res)=>{
     const user = new User(req.body);
@@ -29,6 +27,28 @@ router.post('/users/login', async (req,res)=>{
     }
 });
 
+// EndPoint: user logout
+router.post("/users/logout", auth, async (req, res)=>{
+    try{
+        req.user.tokens = req.user.tokens.filter( (token) => token.token!==req.token );
+        await req.user.save();
+        res.send();
+    }catch(e){
+        res.status(500).send();
+    }
+});
+
+// EndPoint: all user logout
+router.post('/users/logoutall', auth, async (req, res)=>{
+    req.user.tokens = [];
+    try{
+        await req.user.save();
+        res.send();
+    }catch(e){
+        res.status(500).send(e);
+    }
+});
+
 // EndPoint: reading all users
 router.get("/users", auth, async (req, res)=>{
     try{
@@ -41,7 +61,6 @@ router.get("/users", auth, async (req, res)=>{
 
 // EndPoint: reading my own profile
 router.get('/users/me', auth ,(req, res)=>{
-    console.log(req.user);
     res.send(req.user);
 });
 
@@ -72,11 +91,9 @@ router.patch('/users/:id', auth, async (req, res)=>{
     }
 
     try{
-
         const user = await User.findById(id);
         updates.forEach((update) => user[update] = req.body[update]);
         await user.save();
-        
         //const user = await User.findByIdAndUpdate(id, req.body, { new: true, runValidators: true });
         if(!user) return res.status(404).send();
         res.send(user);

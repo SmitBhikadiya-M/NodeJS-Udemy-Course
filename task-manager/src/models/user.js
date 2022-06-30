@@ -48,8 +48,7 @@ const userSchema = new mongoose.Schema({
 });
 
 
-// middleware : for authentication process
-// hear we use statics methods some time its called model methods
+// call Static method of User models using shcema for authentication
 userSchema.statics.findByCredentials = async (email, password) => {
     const user = await User.findOne({ email });
     if(!user){
@@ -62,14 +61,24 @@ userSchema.statics.findByCredentials = async (email, password) => {
     return user;
 }
 
-// middleware : for jwt token
-// hear we use schema methods called as instance methods
+// created genrateAuthTOken methods manullay for user instance
 userSchema.methods.genrateAuthToken = async function(){
     const user = this;
     const token = jwt.sign({_id:user.id.toString()}, 'NodeJsCourseByAndrew');
     user.tokens = user.tokens.concat({ token });
     await user.save();
     return token;
+}
+
+// inbuilt to toJSON methods which only return required data
+userSchema.methods.toJSON = function(){
+    const user = this;
+    const userObject = user.toObject();
+
+    delete userObject.password
+    delete userObject.tokens
+
+    return userObject;
 }
 
 // middleware: hash plain password before saving 
