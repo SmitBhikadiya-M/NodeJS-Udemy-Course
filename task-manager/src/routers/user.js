@@ -64,7 +64,8 @@ router.patch('/users/:id', auth, async (req, res)=>{
     const id = req.params.id;
 
     const updates = Object.keys(req.body);
-    const isValidKeys = updates.every(update => ['name', 'email', 'password', 'age'].includes(update));
+    const allowedKeys = ['name', 'email', 'password', 'age'];
+    const isValidKeys = updates.every(update => allowedKeys.includes(update));
 
     if(!isValidKeys){
         return res.status(400).send({ error: "Invalid Request" });
