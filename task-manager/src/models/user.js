@@ -46,6 +46,8 @@ const userSchema = new mongoose.Schema({
             required: true
         }
     }]
+}, {
+    timestamps: true
 });
 
 // create ralation beetwen Task And User model

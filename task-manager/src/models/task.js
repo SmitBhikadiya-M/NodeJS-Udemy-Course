@@ -16,14 +16,8 @@ const taskSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     }
-});
-
-taskSchema.pre('findByIdAndUpdate', function( next ){
-    const task = this;
-
-    console.log("Task Middleware working..");
-
-    next();
+}, {
+    timestamps: true
 });
 
 const Task = mongoose.model('Task', taskSchema);
