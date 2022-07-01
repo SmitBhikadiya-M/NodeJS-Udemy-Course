@@ -22,10 +22,6 @@ const upload = multer({
     }
 });
 
-
-const errorMiddleWare = (req, res, next) => {
-    throw new Error("From My Middleware");
-}
 app.post('/upload', upload.single('upload') ,(req, res)=>{
     res.send({});
 }, (err, req, res, next) => {
