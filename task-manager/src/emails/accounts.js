@@ -1,24 +1,15 @@
-"use strict";
-const nodemailer = require("nodemailer");
-
-async function sendWelcomeEmail(email, subject='', body='') {
-  let transporter = nodemailer.createTransport({
-    service:'Gmail',
-    auth: {
-        user: process.env.EMAIL_ADMIN,
-        pass: process.env.EMAIL_PASSWORD
-    }
-  });
-  let mailOptions = {
-    from: process.env.EMAIL_ADMIN,
-    to: email,
+const sendEmail = (reciepent, subject='', body='') => {
+  var api_key = process.env.MAILGUN_SECRET_KEY;
+  var domain = process.env.MAILGUN_DOMAIN;
+  var mailgun = require('mailgun-js')({apiKey: api_key, domain: domain});
+   
+  var data = {
+    from: 'sdbhikadiya7648@gmail.com',
+    to: reciepent,
     subject: subject,
     html: body
-  }
-
-  transporter.sendMail(mailOptions, function(err, info){
-    console.log(err, info);
-  });
+  }; 
+  return mailgun.messages().send(data);
 }
 
-module.exports = { sendWelcomeEmail };
+module.exports = { sendEmail };
