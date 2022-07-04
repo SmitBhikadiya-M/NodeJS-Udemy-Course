@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/user");
 const auth = require("../middleware/auth");
 const sharp = require('sharp');
-const sendMail = require('../emails/accounts');
+const { sendEmail } = require('../emails/accounts');
 const router = new express.Router();
 
 // EndPoint: creating users
@@ -11,8 +11,7 @@ router.post('/users', async (req, res)=>{
     try{
         await user.save();
         const token = await user.genrateAuthToken();
-        await sendMail.sendWelcomeEmail(user.email, user.name);
-
+        await sendEmail(user.email, user.name, "<h2>Your Account Created Successfully!!</h2>");
         res.status(201).send({ user, token });
     }catch(e){
         res.status(400).send(e);
@@ -87,10 +86,11 @@ router.patch('/users/me', auth, async (req, res)=>{
     }
 });
 
-// EndPoint: delete user by its id
+// EndPoint: delete user
 router.delete('/users/me', auth, async (req,res)=>{
     try{
         await req.user.remove();
+        await sendEmail(req.user.email, req.user.name, "<h2>Goodbye, I hope to see back sometime soon!!!</h2>");
         res.send(req.user);
     }catch(e){
         res.status(500).send(e);
