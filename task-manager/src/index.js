@@ -1,5 +1,6 @@
 const express = require('express');
 require("./db/mongoose");
+const { sendWelcomeEmail } = require('./emails/accounts');
 
 const userRouter = require("./routers/user");
 const taskRouter = require("./routers/task");
@@ -15,4 +16,8 @@ app.use(taskRouter);
 app.listen(port, ()=>{
     console.log("Server is running on "+port);
 });
+
+//sendWelcomeEmail("smit.bhikadiya@marutitech.com", "Smit Bhikadiya");
+
+
 

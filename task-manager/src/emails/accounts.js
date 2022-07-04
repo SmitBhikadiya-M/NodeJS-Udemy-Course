@@ -1,33 +1,24 @@
 "use strict";
 const nodemailer = require("nodemailer");
 
-async function sendWelcomeEmail(email, name) {
+async function sendWelcomeEmail(email, subject='', body='') {
   let transporter = nodemailer.createTransport({
-    service:'gmail',
-    host: 'smtp.gmail.com',
-    port: 587,
-    secure: false,
-    requireTLS: true,
+    service:'Gmail',
     auth: {
-        user: 'sbhikadiya892@rku.ac.in',
-        pass: 'Sm7648it70967'
+        user: process.env.EMAIL_ADMIN,
+        pass: process.env.EMAIL_PASSWORD
     }
   });
   let mailOptions = {
-    from: 'sbhikadiya892@rku.ac.in',
+    from: process.env.EMAIL_ADMIN,
     to: email,
-    subject: 'Welocme, '+name,
-    text: "Your account is created Successfully!!!"
+    subject: subject,
+    html: body
   }
-
-  transporter.verify(function(err, success){
-    console.log(err, success);
-  });
 
   transporter.sendMail(mailOptions, function(err, info){
     console.log(err, info);
   });
-
 }
 
 module.exports = { sendWelcomeEmail };
