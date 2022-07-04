@@ -3,7 +3,6 @@ require("./db/mongoose");
 
 const userRouter = require("./routers/user");
 const taskRouter = require("./routers/task");
-require('events').EventEmitter.defaultMaxListeners = 15;
 
 const app = express();
 const port = process.env.PORT || 3000;
