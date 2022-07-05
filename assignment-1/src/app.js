@@ -35,13 +35,6 @@ app.get('', (req,res)=>{
     });
 });
 
-app.get('/a1', (req,res)=>{
-    res.render('assignment1', {
-        title: 'Assignment-1',
-        name:"Smit Bhikadiya"
-    });
-});
-
 // github repository endpoint
 app.get('/repolist', (req, res)=>{
     const query = req.query;
