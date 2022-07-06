@@ -4,7 +4,10 @@ const userRouter = require('./routers/users');
 const inventoryRouter = require('./routers/inventory');
 
 const port = process.env.PORT;
-const app = express('/');
+const app = express();
+
+// set default time zone
+process.env.TZ = 'America/Chicago';
 
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));

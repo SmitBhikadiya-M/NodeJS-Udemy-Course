@@ -25,13 +25,13 @@ const inventorySchema = new mongoose.Schema(
       type: Date,
     },
     inventoryImage: {
-      type: Buffer,
+      type: String,
     },
     ownerId: {
       type: mongoose.Types.ObjectId,
       required: true,
       ref: 'User'
-    }
+    },
   },
   {
     timestamps: true,
