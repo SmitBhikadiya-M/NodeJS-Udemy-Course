@@ -6,11 +6,13 @@ const inventoryRouter = require('./routers/inventory');
 const port = process.env.PORT;
 const app = express('/');
 
+app.use(express.json());
+app.use(express.urlencoded({extended: true}));
 app.use(userRouter);
 app.use(inventoryRouter);
 
 app.get('/', (req,res)=>{
-    res.send("I am running..");
+    res.send({error: "Invalid Request!!!"});
 });
 
 app.listen(port, ()=>{
