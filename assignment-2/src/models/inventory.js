@@ -27,6 +27,11 @@ const inventorySchema = new mongoose.Schema(
     inventoryImage: {
       type: Buffer,
     },
+    ownerId: {
+      type: mongoose.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    }
   },
   {
     timestamps: true,
