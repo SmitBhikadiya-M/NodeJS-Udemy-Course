@@ -32,6 +32,10 @@ const inventorySchema = new mongoose.Schema(
     inventoryImage: {
       type: String,
     },
+    isRemoved: {
+      type: Boolean,
+      default: 0
+    }
   },
   {
     timestamps: true,
@@ -44,7 +48,7 @@ inventorySchema.methods.convertDateToGiventTZ = function(tz){
   function convertTZ(date, timeZone){
     return new Date(date.toLocaleString('en-us', { timeZone }));
   }
-  
+
   inventory.expiryTime = convertTZ(inventory.expiryTime, tz);
   inventory.manufacturingTime = convertTZ(inventory.manufacturingTime, tz);
   
@@ -59,9 +63,25 @@ inventorySchema.statics.isTimeZoneValid = function(tz='america/chicago'){
     Intl.DateTimeFormat(undefined, { timeZone: tz });
     return true;
   }catch(e){
-    console.log("Invalid TimeZone Reuqest");
     return false;
   }
+}
+
+inventorySchema.methods.toJSON = function(){
+  const inventory = this.toObject();
+
+  delete inventory.ownerId;
+  delete inventory.isRemoved;
+
+  const expiryTime = new Date(inventory.expiryTime).getTime();
+  const currentTime = new Date().getTime();
+
+  isExpired = (expiryTime >= currentTime);
+
+  inventory.expiryTime = new Date(inventory.expiryTime).toLocaleString();
+  inventory.manufacturingTime = new Date(inventory.manufacturingTime).toLocaleString();
+  inventory.is_Expired = isExpired;
+  return inventory;
 
 }
 
