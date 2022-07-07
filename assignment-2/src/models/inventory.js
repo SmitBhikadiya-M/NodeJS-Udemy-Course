@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const inventorySchema = new mongoose.Schema(
   {
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    },
     name: {
       type: String,
       trim: true,
@@ -27,17 +32,39 @@ const inventorySchema = new mongoose.Schema(
     inventoryImage: {
       type: String,
     },
-    ownerId: {
-      type: mongoose.Types.ObjectId,
-      required: true,
-      ref: 'User'
-    },
   },
   {
     timestamps: true,
   }
 );
 
-const Inventory = new mongoose.model('Inventory', inventorySchema);
+inventorySchema.methods.convertDateToGiventTZ = function(tz){
+  const inventory = this;
+
+  function convertTZ(date, timeZone){
+    return new Date(date.toLocaleString('en-us', { timeZone }));
+  }
+  
+  inventory.expiryTime = convertTZ(inventory.expiryTime, tz);
+  inventory.manufacturingTime = convertTZ(inventory.manufacturingTime, tz);
+  
+  return inventory;
+}
+
+inventorySchema.statics.isTimeZoneValid = function(tz='america/chicago'){
+  if(!Intl || !Intl.DateTimeFormat().resolvedOptions().timeZone){
+    return false;
+  }  
+  try{
+    Intl.DateTimeFormat(undefined, { timeZone: tz });
+    return true;
+  }catch(e){
+    console.log("Invalid TimeZone Reuqest");
+    return false;
+  }
+
+}
+
+const Inventory = mongoose.model('Inventory', inventorySchema);
 
 module.exports = Inventory;

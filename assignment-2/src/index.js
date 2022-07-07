@@ -9,6 +9,7 @@ const app = express();
 // set default time zone
 process.env.TZ = 'America/Chicago';
 
+app.set(express.static('./public'))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(userRouter);
