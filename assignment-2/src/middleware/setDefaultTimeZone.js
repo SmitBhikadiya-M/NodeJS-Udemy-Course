@@ -9,7 +9,6 @@ const setDefaultTimeZone = (req, res, next) => {
             req.body[key] = new Date(req.body[key]);
         }
     });
-    console.log(req.body);
     next();
 }
 
