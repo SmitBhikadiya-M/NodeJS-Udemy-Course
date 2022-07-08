@@ -10,6 +10,7 @@ const User = require('../models/users');
 
 const setDefaultTimeZone = require('../middleware/setDefaultTimeZone');
 const auth = require('../middleware/auth');
+const uploadImage = require('../middleware/imageMulter');
 
 const router = new express.Router();
 
@@ -76,26 +77,14 @@ router.post('/inventory', auth, setDefaultTimeZone, async (req, res) => {
     }
 });
 
-const diskStorage = multer.memoryStorage()
-const filter = (req, file, cb)=>{
-    if(file.mimetype.split('/')[0] === 'image'){
-        cb(null, true);
-    }else{
-        cb(new Error('Only Images are allowed!!'));
-    }
-}
-
-const uploadImage = multer({
-    storage: diskStorage,
-    fileFilter: filter
-});
-
-router.post('/inventory/:id/setimg', auth, uploadImage.single('image'),async (req, res) => {
+router.post('/inventory/:id/setimg', auth, uploadImage().single('image'),async (req, res) => {
     try{
-        const destPath = './src/public/img/inventory';
         const id = req.params.id;
-        const inventory = await Inventory.findOne({ _id:id, ownerId:req.user.id });
-        const filePath = destPath + `/${id.toString()}_inventory.png`;
+        const inventory = await Inventory.findOne({ _id:id, ownerId:req.user.id, isRemoved:false });
+        if(!inventory){
+            return res.status(404).send();
+        }
+        const filePath = `./src/public/img/inventory/${id.toString()}_inventory.png`;
         await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toFile(filePath);
         inventory.inventoryImage = filePath;
         await inventory.save();
@@ -111,6 +100,7 @@ router.get('/inventory/:id/image', auth, async (req, res)=>{
     try{
         const id = req.params.id;
         const inventory = await Inventory.findOne({_id:id, ownerId:req.user.id, isRemoved: false});
+        console.log(inventory);
         if(!inventory){
             return res.status(400).send({error: "Invalid Request!!!"});
         }else if(!inventory.inventoryImage){
@@ -128,23 +118,56 @@ router.patch('/inventory/:id', auth, setDefaultTimeZone, async (req, res)=>{
     const id = req.params.id;
     const allwoedKeys = ['name', 'category', 'expiryTime', 'manufacturingTime', 'quantity'];
     const updateKeys = Object.keys(req.body);
-
     const isMatch = updateKeys.every( (key) => allwoedKeys.includes(key) );
     if(!isMatch){
         return res.status(400).send({error: 'Invalid Request!!'});
     }
-
     const inventory = await Inventory.findOne({_id:id, ownerId:req.user.id});
     if(!inventory){
         return res.status(400).send({error: "Invalid Request!!!"});    
     }
-
     updateKeys.forEach((key) => {
         inventory[key] = req.body[key];
     });
-
     await inventory.save();
     res.send(inventory);
+});
+
+router.patch('/inventory/:id/image', auth, uploadImage().single('image'), async (req, res) => {
+    const id = req.params.id;
+    try{
+        const inventory = await Inventory.findOne({_id:id, ownerId:req.user.id, isRemoved:false});
+        if(!inventory){
+            return res.status(404).send();
+        }
+        if(inventory.inventoryImage){
+            fs.unlinkSync(inventory.inventoryImage);
+            inventory.inventoryImage = undefined;
+        }
+        const filePath = `./src/public/img/inventory/${id.toString()}_inventory.png`;
+        await sharp(req.file.buffer).resize({ width: 250, height: 250 }).png().toFile(filePath);
+        inventory.inventoryImage = filePath;
+        await inventory.save();
+        res.send();
+    }catch(e){
+        res.status(500).send();
+    }
+});
+
+router.delete('/inventory/:id/image', auth, async (req, res)=>{
+    const id = req.params.id;
+    try{
+        const inventory = await Inventory.findOne({_id:id, ownerId: req.user.id, isRemoved:false});
+        if(!inventory){
+            return res.status(404).send();
+        }
+        fs.unlinkSync(inventory.inventoryImage);
+        inventory.inventoryImage = undefined;
+        await inventory.save();
+        res.send(inventory);
+    }catch(e){
+        res.status(500).send();
+    }
 });
 
 router.delete('/inventory/:id', auth, async (req, res)=>{
@@ -155,8 +178,10 @@ router.delete('/inventory/:id', auth, async (req, res)=>{
             return res.status(404).send();
         }
         inventory.isRemoved = true;
-        fs.unlinkSync(inventory.inventoryImage);
-        inventory.inventoryImage = undefined;
+        if(inventory.inventoryImage){
+            fs.unlinkSync(inventory.inventoryImage);
+            inventory.inventoryImage = undefined;
+        }
         await inventory.save();
         res.send(inventory);
 

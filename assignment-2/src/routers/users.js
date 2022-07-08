@@ -13,6 +13,11 @@ router.get('/users', auth, async (req,res)=>{
     }
 });
 
+// Read User Details
+router.get('/users/me', auth, async (req, res)=>{
+    res.send(req.user);
+});
+
 // User Registration REST API
 router.post('/users', async (req, res) => {
     try{
@@ -36,9 +41,27 @@ router.post('/users/login', async (req, res) => {
     }
 });
 
-// Read User Details
-router.get('/users/me', auth, async (req, res)=>{
-    res.send(req.user);
+// User Logout
+router.post('/users/me/logout', auth, async (req, res)=>{
+    try{
+        req.user.tokens = req.user.tokens.filter( (token) => token.token!==req.token );
+        await req.user.save();
+        res.send();
+    }catch(e){
+        res.status(500).send();
+    }
+});
+
+
+// User Logout
+router.post('/users/me/logoutall', auth, async (req, res)=>{
+    try{
+        req.user.tokens = [];
+        await req.user.save();
+        res.send();
+    }catch(e){
+        res.status(500).send();
+    }
 });
 
 
@@ -47,13 +70,10 @@ router.patch('/users', auth, async(req, res)=>{
     
     const allowedKeys = ['name', 'email', 'password'];
     const updates = Object.keys(req.body);
-
     const isMatch = updates.every((key) => allowedKeys.includes(key));
-
     if(!isMatch){
         return res.status(400).send({error: 'Invalid Request'});
     }
-
     try{
         updates.forEach((key)=> {
             req.user[key] = req.body[key];
