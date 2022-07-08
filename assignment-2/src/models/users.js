@@ -46,7 +46,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.virtual('inventory', {
-    path: 'Inventory',
+    ref: 'Inventory',
     localField: '_id',
     foreignField: 'ownerId'
 });
@@ -95,6 +95,6 @@ userSchema.pre('remove', async function(next){
     next();
 });
 
-const User = new mongoose.model('User', userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;

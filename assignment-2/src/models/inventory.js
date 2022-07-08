@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const inventorySchema = new mongoose.Schema(
   {
+    ownerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      required: true,
+      ref: 'User'
+    },
     name: {
       type: String,
       trim: true,
@@ -25,12 +30,11 @@ const inventorySchema = new mongoose.Schema(
       type: Date,
     },
     inventoryImage: {
-      type: Buffer,
+      type: String,
     },
-    ownerId: {
-      type: mongoose.Types.ObjectId,
-      required: true,
-      ref: 'User'
+    isRemoved: {
+      type: Boolean,
+      default: 0
     }
   },
   {
@@ -38,6 +42,49 @@ const inventorySchema = new mongoose.Schema(
   }
 );
 
-const Inventory = new mongoose.model('Inventory', inventorySchema);
+inventorySchema.methods.convertDateToGiventTZ = function(tz){
+  const inventory = this;
+
+  function convertTZ(date, timeZone){
+    return new Date(date.toLocaleString('en-us', { timeZone }));
+  }
+
+  inventory.expiryTime = convertTZ(inventory.expiryTime, tz);
+  inventory.manufacturingTime = convertTZ(inventory.manufacturingTime, tz);
+  
+  return inventory;
+}
+
+inventorySchema.statics.isTimeZoneValid = function(tz='america/chicago'){
+  if(!Intl || !Intl.DateTimeFormat().resolvedOptions().timeZone){
+    return false;
+  }  
+  try{
+    Intl.DateTimeFormat(undefined, { timeZone: tz });
+    return true;
+  }catch(e){
+    return false;
+  }
+}
+
+inventorySchema.methods.toJSON = function(){
+  const inventory = this.toObject();
+
+  delete inventory.ownerId;
+  delete inventory.isRemoved;
+
+  const expiryTime = new Date(inventory.expiryTime).getTime();
+  const currentTime = new Date().getTime();
+
+  isExpired = (expiryTime >= currentTime);
+
+  inventory.expiryTime = new Date(inventory.expiryTime).toLocaleString();
+  inventory.manufacturingTime = new Date(inventory.manufacturingTime).toLocaleString();
+  inventory.is_Expired = isExpired;
+  return inventory;
+
+}
+
+const Inventory = mongoose.model('Inventory', inventorySchema);
 
 module.exports = Inventory;
