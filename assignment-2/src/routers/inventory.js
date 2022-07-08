@@ -1,7 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const multer = require('multer');
-const setDefaultTimeZone = require('../middleware/setDefaultTimeZone');
 const path = require('path');
 const fs = require('fs');
 const sharp = require('sharp');
@@ -9,8 +8,8 @@ const sharp = require('sharp');
 const Inventory = require('../models/inventory');
 const User = require('../models/users');
 
+const setDefaultTimeZone = require('../middleware/setDefaultTimeZone');
 const auth = require('../middleware/auth');
-const { match } = require('assert');
 
 const router = new express.Router();
 
@@ -40,6 +39,10 @@ router.get('/inventory', auth, async (req,res)=>{
             match
         });
 
+        if(!req.user.inventory){
+            return res.status(404).send();
+        }
+
         const inventories = req.user.inventory.map((inventory)=>{
             return inventory.convertDateToGiventTZ(tz);
         })
@@ -54,6 +57,9 @@ router.get('/inventory/:id', auth, async(req, res) => {
     const id = req.params.id;
     try{
         const inventory = await Inventory.findOne({_id:id, ownerId:req.user.id, isRemoved: false});
+        if(!inventory){
+            return res.status(404).send();
+        }
         res.send(inventory);
     }catch(e){
         res.status(500).send(e);
@@ -107,6 +113,8 @@ router.get('/inventory/:id/image', auth, async (req, res)=>{
         const inventory = await Inventory.findOne({_id:id, ownerId:req.user.id, isRemoved: false});
         if(!inventory){
             return res.status(400).send({error: "Invalid Request!!!"});
+        }else if(!inventory.inventoryImage){
+            return res.status(404).send();
         }
         const fileBuffer = fs.readFileSync(inventory.inventoryImage);
         res.set('Content-Type', 'image/png');
@@ -142,11 +150,13 @@ router.patch('/inventory/:id', auth, setDefaultTimeZone, async (req, res)=>{
 router.delete('/inventory/:id', auth, async (req, res)=>{
     const id = req.params.id;
     try{
-        const inventory = await Inventory.findOne({_id:id, ownerId: req.user.id});
+        const inventory = await Inventory.findOne({_id:id, ownerId: req.user.id, isRemoved:false});
         if(!inventory){
-            return res.status(400).send({error: 'Invalid Request!!!'});
+            return res.status(404).send();
         }
         inventory.isRemoved = true;
+        fs.unlinkSync(inventory.inventoryImage);
+        inventory.inventoryImage = undefined;
         await inventory.save();
         res.send(inventory);
 
