@@ -5,13 +5,13 @@ const messages = document.querySelector('#messages');
 
 // Teplates
 const messageTemplate = document.querySelector("#message-template").innerHTML;
-const locationTemplate = document.querySelector("#location-template").innerHTML;
+const locationTemplate = document.querySelector("#location-message-template").innerHTML;
 
 
 socket.on('message', (message) => {
 
     const html = Mustache.render(messageTemplate, { message: message.text, createdAt: moment(message.createdAt).format('h:mm:ss a') });
-    messages.insertAdjacentHTML('beforebegin', html);
+    messages.insertAdjacentHTML('beforeend', html);
 });
 
 socket.on('location', (message)=>{
