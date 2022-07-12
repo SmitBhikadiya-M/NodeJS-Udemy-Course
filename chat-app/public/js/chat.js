@@ -9,12 +9,13 @@ const locationTemplate = document.querySelector("#location-template").innerHTML;
 
 
 socket.on('message', (message) => {
-    const html = Mustache.render(messageTemplate, { message });
+
+    const html = Mustache.render(messageTemplate, { message: message.text, createdAt: moment(message.createdAt).format('h:mm:ss a') });
     messages.insertAdjacentHTML('beforebegin', html);
 });
 
-socket.on('location', (url)=>{
-    const html = Mustache.render(locationTemplate, { url });
+socket.on('location', (message)=>{
+    const html = Mustache.render(locationTemplate, { url:message.url, createdAt: moment(message.createdAt).format('h:mm:ss a') });
     messages.insertAdjacentHTML('beforeend', html);
     sendLocationBtn.removeAttribute('disabled');
 })

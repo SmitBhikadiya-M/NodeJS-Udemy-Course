@@ -20,13 +20,13 @@
 
     <script id="message-template" type="text/html">
         <div>
-            <p>{{ message }}</p>    
+            <p>{{ createdAt }} - {{ message }}</p>    
         </div>
     </script>
     
     <script id="location-template" type="text/html">
         <div>
-            <a href="{{ url }}" target="_blank">My Current Location</a>    
+            <a href="{{ url }}" target="_blank">My Current Location at {{ createdAt }}</a>    
         </div>
     </script>
     

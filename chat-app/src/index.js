@@ -7,6 +7,7 @@ const Filter = require('bad-words');
 const app = express()
 const server = http.createServer(app)
 const io = socketio(server)
+const { generateMessage, generateLocationMessage } = require('./utils/messages');
 
 const port = process.env.PORT || 3000;
 const publicDirectoryPath = path.join(__dirname, '../public');
@@ -16,8 +17,9 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection', (socket) => {
     console.log('New WebSocket connection');
 
-    socket.emit('message', 'Welcome!');
-    socket.broadcast.emit('message', 'A new user has joined!');
+    socket.emit('message', generateMessage('Welcome!!'));
+
+    socket.broadcast.emit('message', generateMessage('A new user has joined!'));
 
     socket.on('sendMessage', (message, callback) => {
 
@@ -27,7 +29,7 @@ io.on('connection', (socket) => {
             return callback('Profanity is not allowed!');
         }
 
-        io.emit('message', message);
+        io.emit('message', generateMessage(message));
         callback();
     });
 
@@ -35,7 +37,7 @@ io.on('connection', (socket) => {
         if(!coords.latitude || !coords.longitude){
             return callback('Coordinates Not Found!!');
         }
-        io.emit('location', `https://google.com/maps?q=${coords.latitude},${coords.longitude}`)
+        io.emit('location', generateLocationMessage(`https://google.com/maps?q=${coords.latitude},${coords.longitude}`))
     });
 
     socket.on('disconnect', () => {
