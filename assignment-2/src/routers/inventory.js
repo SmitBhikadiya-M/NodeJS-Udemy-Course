@@ -71,7 +71,7 @@ router.post('/inventory', auth, setDefaultTimeZone, async (req, res) => {
     try{
         const inventory = new Inventory({...req.body, ownerId: req.user.id});
         await inventory.save();
-        res.send(inventory);
+        res.status(201).send(inventory);
     }catch(e){
         res.status(500).send();
     }

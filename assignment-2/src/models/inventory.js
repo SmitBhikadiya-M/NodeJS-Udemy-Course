@@ -78,8 +78,8 @@ inventorySchema.methods.toJSON = function(){
 
   isExpired = (expiryTime >= currentTime);
 
-  inventory.expiryTime = new Date(inventory.expiryTime).toLocaleString();
-  inventory.manufacturingTime = new Date(inventory.manufacturingTime).toLocaleString();
+  inventory.expiryTime = new Date(inventory.expiryTime);
+  inventory.manufacturingTime = new Date(inventory.manufacturingTime);
   inventory.is_Expired = isExpired;
   return inventory;
 

@@ -4,9 +4,7 @@ const User = require("../src/models/users");
 const {
   setupDB,
   userOne,
-  userOneId,
-  userTwo,
-  userTwoId,
+  userTwo
 } = require("./requirements/db");
 
 beforeEach(setupDB);
@@ -73,5 +71,3 @@ test("Should User Logout!!", async () => {
   const user = await User.findById(userOne._id);
   expect(user).not.toBeNull();
 });
-
-test("Should User AllLogout!!", () => {});
