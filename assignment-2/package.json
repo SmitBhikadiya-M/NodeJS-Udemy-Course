@@ -4,13 +4,16 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "env-cmd -f ./config/dev.env nodemon src/index -e js"
+    "dev": "env-cmd -f ./config/dev.env nodemon src/index -e js",
+    "test": "env-cmd -f ./config/test.env jest --watchAll --detectOpenHandles"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
     "env-cmd": "^10.1.0",
-    "nodemon": "^2.0.18"
+    "jest": "^28.1.2",
+    "nodemon": "^2.0.18",
+    "supertest": "^6.2.4"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
