@@ -9,7 +9,7 @@
 
 <body>
     <div class="chat">
-        <div class="chat__sidebar"></div>
+        <div id="sidebar" class="chat__sidebar"></div>
         <div class="chat__main" style="padding:10px">
             <div id="messages" class="chat__messages" >
     
@@ -17,7 +17,7 @@
         
             <div class="compose">
                 <form id="message-form">
-                    <input name="message" placeholder="Message">
+                    <input name="message" placeholder="Message" required autocomplete="off">
                     <button>Send</button>
                 </form>
                 <button id="send-location">Send location</button>
@@ -27,9 +27,9 @@
     </div>
     
     <script id="message-template" type="text/html">
-        <div>
+        <div class="message">
             <p>
-                <span class="message__name">User Name</span>
+                <span class="message__name">{{ username }}</span>
                 <span class="message__meta">{{ createdAt }}</span>
             </p>
             {{ message }} 
@@ -37,13 +37,23 @@
     </script>
     
     <script id="location-message-template" type="text/html">
-        <div>
+        <div class="message">
             <p>
-                <span class="message__name">User Name</span>
+                <span class="message__name">{{ username }}</span>
                 <span class="message__meta">{{ createdAt }}</span>
             </p>
             <p><a href="{{ url }}" target="_blank">My Current Location</a></p>    
         </div>
+    </script>
+
+    <script id="sidebar-template" type="text/html">
+        <h2 class="room-title">{{ room }}</h2>
+        <h3 class="list-title">Users</h3>
+        <ul class="users">
+            {{ #users }}
+                <li>{{ username }}</li>
+            {{ /users }}
+        </ul>
     </script>
     
     
