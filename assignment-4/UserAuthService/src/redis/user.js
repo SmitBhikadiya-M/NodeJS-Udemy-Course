@@ -7,7 +7,7 @@ const getUser = (username) => {
 }
 
 const setUser = (user) => {
-    return client.hSet('users', `users_${user.username}`, JSON.stringify(user));
+    return client.hSet('users', `users_${user.username}`, JSON.stringify({ ...user, requestCounter: 0 }));
 }
 
 const connect = () => {
