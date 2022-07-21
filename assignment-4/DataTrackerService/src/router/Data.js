@@ -49,15 +49,20 @@ router.get('/messages', auth, async (req, res)=>{
         })
         return isvalid;
     });
-    if(query.date) MData =  MData.filter(date=>{
-        const mdate = new Date(date.createdAt).toLocaleDateString();
-        const cdate = new Date(query.date).toLocaleDateString();
-        if(cdate=='Invalid Date' || cdate=='NAN'){
-            return res.status(400).send({error: 'Invalid Date Format: must be MM/DD/YYYY'})
-        }
-        return mdate===cdate;
-    });
-    res.send(MData);
+    try{
+        if(query.date) MData =  MData.filter(date=>{
+            const mdate = new Date(date.createdAt).toLocaleDateString();
+            const cdate = new Date(query.date).toLocaleDateString();
+            if(cdate=='Invalid Date' || cdate=='NAN'){
+                throw ('Invalid Date Format: must be MM/DD/YYYY');
+            }
+            return mdate===cdate;
+        });
+        res.send({ resultLength: MData.length, results: MData});
+    }catch(e){
+        res.status(400).send({ error: e })
+    }
+    
 });
 
 
