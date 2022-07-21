@@ -9,7 +9,12 @@ app.use(express.json());
 app.post('/datapush', auth, async (req, res)=>{
     try{
         const user = JSON.parse(await client.hGet('users', `users_${req.user.username}`));
-        publishData({ userId: user.userId, message: req.message, number: (Math.random()*60)+1});
+        publishData({ 
+            userId: user.userId, 
+            requestCounter: user.requestCounter, 
+            message: req.body.message, 
+            number: Math.floor((Math.random()*60))+1
+        });
         res.send(user);
     }catch(e){
         req.status(500).send();
