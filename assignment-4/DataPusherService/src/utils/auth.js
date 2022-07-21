@@ -16,6 +16,7 @@ const auth = async (req, res, next) => {
             return res.status(400).send({error: 'Invalid Request'});
         }
         req.user = user;
+        req.token = token;
         await client.hSet('users', `users_${data.username}`, JSON.stringify({ ...user, requestCounter: user.requestCounter+1 }));
         next();
     }catch(e){

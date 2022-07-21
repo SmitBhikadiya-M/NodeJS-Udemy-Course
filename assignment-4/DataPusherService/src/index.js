@@ -10,6 +10,7 @@ app.post('/datapush', auth, async (req, res)=>{
     try{
         const user = JSON.parse(await client.hGet('users', `users_${req.user.username}`));
         publishData({ 
+            authToken: req.token,
             userId: user.userId, 
             requestCounter: user.requestCounter, 
             message: req.body.message, 

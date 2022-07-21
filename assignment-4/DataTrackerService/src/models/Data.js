@@ -6,14 +6,14 @@ const dataSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    _id: {
+    userId: {
         type: String,
         required: true,
-        unique: true,
     },
     requestId: {
         type: Number,
-        required: true
+        required: true,
+        unique: true
     },
     category: {
         type: String,

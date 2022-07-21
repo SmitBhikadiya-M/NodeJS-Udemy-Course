@@ -1,13 +1,8 @@
 const amqp = require('amqplib');
+const axios = require('axios');
 
-const connect = async () => {
-    const conn = await amqp.connect(process.env.AMQP_CONN);
-    const channel = await conn.createChannel();
-    await channel.assertQueue(process.env.RABBIT_ASSERT_QUEUE_NAME);
-    await channel.consume(process.env.RABBIT_ASSERT_QUEUE_NAME, (message) => {
-        const data = JSON.parse(message.content.toString());
-        validateData(data);
-    });
+const awaitTimeOut = (deley, cb) => {
+    return new Promise( resolve => setTimeout( ()=>{ cb(); resolve();} , deley) );
 }
 
 const validateData = async (data) => {
@@ -22,11 +17,38 @@ const validateData = async (data) => {
     }else{
         data.category = 'Direct';
     }
-    console.log(data);
+    return data;
 }
 
-const awaitTimeOut = (deley, cb) => {
-    return new Promise( resolve => setTimeout( ()=>{ cb(); resolve();} , deley) );
+
+const sendDataToDataTracker = async (data) => {
+    return await axios({
+        method: 'post',
+        url: 'http://localhost:3002/insert',
+        headers: {
+            'Authorization': `Bearer ${data.authToken}`,
+            'Content-Type': 'application/json'
+        },
+        data: {
+            ...data, authToken: undefined
+        }
+    });
+}
+
+const connect = async () => {
+    const conn = await amqp.connect(process.env.AMQP_CONN);
+    const channel = await conn.createChannel();
+    await channel.assertQueue(process.env.RABBIT_ASSERT_QUEUE_NAME);
+    await channel.consume(process.env.RABBIT_ASSERT_QUEUE_NAME, async (message) => {
+        let data = JSON.parse(message.content.toString());
+        data = await validateData(data);
+        try{
+            const res = await sendDataToDataTracker(data);
+            console.log(res.data);
+        }catch(e){
+            console.error(e.message);
+        }
+    });
 }
 
 connect();

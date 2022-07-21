@@ -14,6 +14,7 @@
     "nodemon": "^2.0.19"
   },
   "dependencies": {
-    "amqplib": "^0.10.0"
+    "amqplib": "^0.10.0",
+    "axios": "^0.27.2"
   }
 }
