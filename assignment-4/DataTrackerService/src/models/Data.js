@@ -1,11 +1,13 @@
 const mongoose = require('mongoose');
 
 const dataSchema = new mongoose.Schema({
-    userMessage: {
-        type: String,
-        required: true,
-        trim: true
-    },
+    userMessage: [{
+        message: {
+            type: String,
+            required: true,
+            trim: true
+        }
+    }],
     userId: {
         type: String,
         required: true,
@@ -18,8 +20,9 @@ const dataSchema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
+        lowercase: true,
         validate(val){
-            if(!['Direct', 'Retried', 'Failed'].includes(val)){
+            if(!['direct', 'retried', 'failed'].includes(val)){
                 throw new Error('Invalid Category Type!!');
             }
         }

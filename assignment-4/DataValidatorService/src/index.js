@@ -24,7 +24,7 @@ const validateData = async (data) => {
 const sendDataToDataTracker = async (data) => {
     return await axios({
         method: 'post',
-        url: 'http://localhost:3002/insert',
+        url: 'http://localhost:3003/insert',
         headers: {
             'Authorization': `Bearer ${data.authToken}`,
             'Content-Type': 'application/json'
@@ -44,7 +44,7 @@ const connect = async () => {
         data = await validateData(data);
         try{
             const res = await sendDataToDataTracker(data);
-            console.log(res.data);
+            console.log("Send Data To Data Tracker Service!!");
         }catch(e){
             console.error(e.message);
         }

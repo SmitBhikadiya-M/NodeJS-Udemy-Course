@@ -7,6 +7,7 @@ const auth = async ( req, res, next ) => {
         if(!data || !data.username || !data.userId){
             throw new Error();
         }
+        req.userId = data.userId;
         next();
     }catch(e){
         res.status(500).send();

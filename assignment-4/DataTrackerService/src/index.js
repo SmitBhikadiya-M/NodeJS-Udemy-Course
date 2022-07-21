@@ -3,7 +3,7 @@ require('./db/connection');
 const DataRouter = require('./router/Data');
 
 const app = express();
-const port = process.env.PORT || 3002;
+const port = process.env.PORT || 3003;
 
 app.use(express.json());
 app.use(DataRouter);

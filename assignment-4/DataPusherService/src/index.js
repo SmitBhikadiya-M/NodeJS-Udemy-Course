@@ -13,7 +13,7 @@ app.post('/datapush', auth, async (req, res)=>{
             authToken: req.token,
             userId: user.userId, 
             requestCounter: user.requestCounter, 
-            message: req.body.message, 
+            messages: req.body.data, 
             number: Math.floor((Math.random()*60))+1
         });
         res.send(user);

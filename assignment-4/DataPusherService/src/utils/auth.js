@@ -10,7 +10,6 @@ const auth = async (req, res, next) => {
         if(!data){
             return res.status(400).send({error: 'Invalid Request'});
         }
-        // check weather user is exits or not 
         const user = JSON.parse(await client.hGet('users', `users_${data.username}`));
         if(!user){
             return res.status(400).send({error: 'Invalid Request'});
