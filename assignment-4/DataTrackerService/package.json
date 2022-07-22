@@ -1,0 +1,21 @@
+{
+  "name": "datatrackerservice",
+  "version": "1.0.0",
+  "description": "Data Tracker Service",
+  "main": "index.js",
+  "scripts": {
+    "dev": "env-cmd -f ../config/dev.env nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "env-cmd": "^10.1.0",
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "express": "^4.18.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.4.6"
+  }
+}
