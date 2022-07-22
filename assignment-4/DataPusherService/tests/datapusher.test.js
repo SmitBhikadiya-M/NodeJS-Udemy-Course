@@ -9,7 +9,7 @@ test('Should publish a Data', async () => {
             message: "Hello, How Are You???"
         },
         {
-            message: "Hello, How is it goinig???"
+            message: "Hello, How is it going???"
         }
     ] }
     await client.connect();
