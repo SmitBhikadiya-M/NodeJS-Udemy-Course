@@ -2,9 +2,9 @@ const request = require('supertest');
 const { app } = require('../src/app');
 const bcrypt = require('bcrypt');
 const { v4:uuid }  = require('uuid');
-const redis = require('redis');
 const jwt = require('jsonwebtoken');
 const { connect, getUser, setUser, delUser } = require('../src/redis/user');
+const { storeToken } = require('./helper/storeData');
 
 const hashPassword = async ()=>{
     return await bcrypt.hash('Yash@123', 8);
@@ -47,4 +47,5 @@ test('Should User Signin', async ()=>{
         username: userTwo.username,
         userId
     });
+    expect(storeToken(resData.token)).toBe(true);
 });
