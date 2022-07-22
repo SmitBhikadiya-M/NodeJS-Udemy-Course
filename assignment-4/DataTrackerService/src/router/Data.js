@@ -27,7 +27,6 @@ router.post('/insert', auth, async (req, res)=>{
             });
         }
         const data = await new Data(dataRecords).save();
-        console.log("Data Saved Successfully");
         res.send(data); 
     }catch(e){
         res.status(500).send({error: e});

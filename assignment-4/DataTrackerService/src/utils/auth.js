@@ -10,7 +10,7 @@ const auth = async ( req, res, next ) => {
         req.userId = data.userId;
         next();
     }catch(e){
-        res.status(500).send();
+        res.status(500).send(e);
     }
 }
 
