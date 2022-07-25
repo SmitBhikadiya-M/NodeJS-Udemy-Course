@@ -1,0 +1,68 @@
+{
+  "openapi": "3.0.0",
+  "x-stoplight": {
+    "id": "otk5u8w5u16rx"
+  },
+  "info": {
+    "title": "Data-Tracker-Service",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3003"
+    }
+  ],
+  "paths": {
+    "/messages": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {
+          "200": {
+            "description": "get result along with result length ( number of response )"
+          },
+          "500": {
+            "description": "Got Error response with appropriate message"
+          }
+        },
+        "operationId": "get-messages",
+        "parameters": [
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "date",
+            "description": "filter data by date like if you want all messages where date is equal to 12/07/2022"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "text",
+            "description": "you will get all request array along with messages where any one message of that perticuler request which  includes this text"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "header",
+            "name": "Authorization",
+            "description": "User needs to pass auth web token as verification token which holds userID for user verification"
+          },
+          {
+            "schema": {
+              "type": "string"
+            },
+            "in": "query",
+            "name": "category",
+            "description": "you can filter your response as per category like 'direct', 'failed' or 'retried'"
+          }
+        ],
+        "description": "Using This REST, user can grab all the requests with messages and also grab request by category and date. user can search messages by perticuler word or string line as text query param."
+      },
+      "parameters": []
+    }
+  }
+}
