@@ -1,0 +1,83 @@
+{
+  "openapi": "3.0.0",
+  "x-stoplight": {
+    "id": "hqwfv103a59e8"
+  },
+  "info": {
+    "title": "User Auth Service",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    }
+  ],
+  "paths": {
+    "/user/signup": {
+      "post": {
+        "summary": "",
+        "operationId": "post-user-signup",
+        "responses": {
+          "200": {
+            "description": "User will get username, password with new userId "
+          },
+          "400": {
+            "description": "if username or password is invalid or user is already exits"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "description": "This API is for User SignUp. Where User needs to pass username and password with request body if any field is missing or invalid then user will get error as a response with appropriate responce code.\nif everything is ok then data will be stored inside a Redis Hash",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "x-examples": {
+                  "example-1": {
+                    "username": "SmitBhikadiya",
+                    "password": "Smit@123"
+                  }
+                }
+              }
+            }
+          },
+          "description": "{ \"username\": \"SmitBhikadiya\", \"password\": \"Smit@123\" }"
+        }
+      }
+    },
+    "/users/signin": {
+      "post": {
+        "summary": "",
+        "operationId": "post-users-signin",
+        "responses": {
+          "200": {
+            "description": "Response includes username, password(hash), userId(uuid), token(jwt) and requestCounter"
+          },
+          "400": {
+            "description": "if username or password is incorrect"
+          },
+          "404": {
+            "description": "if username is not exits"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {}
+              }
+            }
+          },
+          "description": "{\n    \"username\": \"SmitBhikadiya\",\n    \"password\": \"Smit@1234\"\n}"
+        },
+        "description": "In this REST API, User can singin for accesing authenticate requests like data pusher, tracker.\nalso send appropriate response if failed to signin. When user request for signin one json web token will be generated which holds userId along with the username."
+      }
+    }
+  }
+}
